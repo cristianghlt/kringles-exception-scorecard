@@ -1,0 +1,1462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=1400"/>
+<title>Kringles Exception Scorecard | June 2026 MTD</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-treemap@2.3.0/dist/chartjs-chart-treemap.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#EBEBEB;color:#1F2937;font-size:12px;min-width:1390px}
+
+.page{width:1380px;margin:10px auto;background:#fff;box-shadow:0 2px 16px rgba(0,0,0,.14);border:1px solid #D1D5DB}
+
+/* ── HEADER ─────────────────────────────────────────── */
+.header{background:#1F3864;display:flex;align-items:center;justify-content:space-between;padding:0 18px;height:56px}
+.hdr-left{display:flex;align-items:center;gap:12px}
+.logo{width:42px;height:42px;background:#2E75B6;border:2px solid rgba(255,255,255,.55);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;color:#fff;flex-shrink:0}
+.hdr-titles .t1{font-size:15px;font-weight:700;color:#fff;letter-spacing:.2px}
+.hdr-titles .t2{font-size:10.5px;color:#93C5FD;margin-top:2px}
+.hdr-filters{display:flex;gap:6px}
+.fc{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);border-radius:4px;padding:4px 10px;min-width:88px;text-align:center}
+.fc-lbl{display:block;font-size:11px;font-weight:700;color:#93C5FD;text-transform:uppercase;letter-spacing:.5px}
+.fc-val{display:block;font-size:10px;font-weight:700;color:#fff;margin-top:1px}
+
+/* ── KPI ROW ─────────────────────────────────────────── */
+.kpi-row{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:2px solid #E5E7EB;background:#F9FAFB}
+.kpi-box{padding:8px 10px;display:flex;align-items:center;gap:8px;border-right:1px solid #E5E7EB}
+.kpi-box:last-child{border-right:none}
+.kpi-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ic-navy{background:#1F3864}.ic-green{background:#137333}.ic-teal{background:#0E7490}
+.ic-amber{background:#D97706}.ic-red{background:#C00000}.ic-orange{background:#B45309}.ic-indigo{background:#4F46E5}
+.kpi-lbl{font-size:10.5px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:.4px;line-height:1}
+.kpi-val{font-size:18px;font-weight:700;line-height:1.2;letter-spacing:-.5px;margin-top:2px}
+.kpi-sub{font-size:10px;color:#6B7280;margin-top:2px;line-height:1.3}
+.c-navy{color:#1F3864}.c-green{color:#137333}.c-teal{color:#0E7490}
+.c-red{color:#C00000}.c-amber{color:#D97706}
+.risk-badge{font-size:12px;font-weight:800;color:#C00000;margin-top:3px;line-height:1}
+.risk-sub{font-size:10px;color:#6B7280;margin-top:2px}
+
+/* ── SECTIONS 1 & 2 ─────────────────────────────────── */
+.row12{display:grid;grid-template-columns:370px 1fr;border-bottom:1px solid #E5E7EB;min-height:232px}
+.sec{padding:10px 14px;border-right:1px solid #E5E7EB}
+.sec:last-child{border-right:none}
+.sec-hdr{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:700;color:#1F3864;text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid #2E75B6;padding-bottom:4px;margin-bottom:9px}
+.sec-num{background:#2E75B6;color:#fff;width:17px;height:17px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
+.chart-wrap{position:relative}
+.bu-wrap{height:148px}
+.wf-wrap{height:188px}
+.bu-legend{display:flex;gap:12px;margin-top:6px;flex-wrap:wrap}
+.bu-leg{display:flex;align-items:center;gap:4px;font-size:10px;color:#6B7280}
+.bu-dot{width:10px;height:10px;border-radius:2px}
+
+/* ── SECTION 3 ───────────────────────────────────────── */
+.sec3{border-bottom:1px solid #E5E7EB;padding:10px 14px}
+.sku-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px}
+.blk-title{font-size:11px;font-weight:700;color:#fff;padding:4px 8px;letter-spacing:.2px}
+.bg-green{background:#137333}.bg-red{background:#C00000}.bg-amber{background:#D97706}.bg-teal{background:#0E7490}
+.sku-tbl{width:100%;border-collapse:collapse}
+.sku-tbl thead tr{background:#DBEAFE}
+.sku-tbl th{font-size:11px;font-weight:700;color:#1F3864;padding:3px 6px;text-transform:uppercase;letter-spacing:.3px;border-bottom:1px solid #BFDBFE;text-align:left}
+.sku-tbl th.r{text-align:right}
+.sku-tbl td{font-size:10px;padding:3px 6px;border-bottom:1px solid #F3F4F6;color:#1F2937;vertical-align:middle}
+.sku-tbl td.r{text-align:right}
+.sub-row td{font-weight:700;background:#F9FAFB}
+.overdue{background:#FEF2F2 !important}
+.due-today{background:#FFFBEB !important}
+.g-pos{color:#137333;font-weight:700}.g-neg{color:#C00000;font-weight:700}
+.g-amb{color:#D97706;font-weight:700}.g-teal{color:#0E7490;font-weight:700}
+.tag{display:inline-block;padding:1px 5px;border-radius:2px;font-size:11px;font-weight:700;color:#fff}
+.tag-red{background:#C00000}.tag-amb{background:#D97706}.tag-grn{background:#137333}
+.sku-note{font-size:11px;color:#6B7280;margin-top:6px;font-style:italic;border-top:1px solid #E5E7EB;padding-top:5px}
+
+/* ── SECTION 4 ───────────────────────────────────────── */
+.sec4{padding:10px 14px}
+.act-tbl{width:100%;border-collapse:collapse;margin-top:8px}
+.act-tbl thead tr{background:#1F3864}
+.act-tbl th{font-size:10px;font-weight:700;color:#fff;padding:5px 10px;text-transform:uppercase;letter-spacing:.4px;text-align:left}
+.act-tbl td{padding:6px 10px;border-bottom:1px solid #E5E7EB;font-size:11px;vertical-align:middle}
+.act-tbl tr:last-child td{border-bottom:none}
+.act-tbl tr:hover{background:#F9FAFB}
+.pbadge{width:21px;height:21px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;color:#fff}
+.p1{background:#C00000}.p2{background:#C00000}.p3{background:#D97706}.p4{background:#2E75B6}
+.tbadge{display:inline-block;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:700;letter-spacing:.4px;color:#fff}
+.t-exec{background:#D97706}.t-sales{background:#2E75B6}.t-crit{background:#C00000}
+.fn{font-size:11px;color:#6B7280;margin-top:7px;font-style:italic;border-top:1px solid #E5E7EB;padding-top:5px}
+
+/* ── NAV TABS ────────────────────────────────────────── */
+.nav-tabs{display:flex;gap:0;background:#1a2f5a;padding:0 18px;border-bottom:3px solid #2E75B6}
+.nav-tab{padding:8px 18px;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;border:none;cursor:pointer;color:#93C5FD;background:transparent;border-bottom:3px solid transparent;margin-bottom:-3px;transition:color .2s}
+.nav-tab:hover{color:#fff}
+.nav-tab.active{color:#fff;border-bottom-color:#fff;background:rgba(255,255,255,.07)}
+/* ── FORECAST TRENDS PAGE ──────────────────────── */
+.fcst-wrap{padding:10px 14px;overflow-x:auto}
+.fcst-tbl{width:100%;border-collapse:collapse;font-size:11px;min-width:900px}
+.fcst-tbl th{padding:3px 7px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;border-bottom:2px solid #E5E7EB;color:#6B7280;text-align:center;white-space:nowrap;background:#F9FAFB}
+.fcst-tbl td{padding:3px 7px;text-align:center;border-bottom:1px solid #F3F4F6;white-space:nowrap;vertical-align:middle}
+.fcst-tbl td:first-child{text-align:left;font-weight:700;color:#1F3864}
+.fcst-grp{background:#1F3864!important;color:#fff!important;font-size:10.5px;font-weight:800;letter-spacing:.6px;text-transform:uppercase}
+.fcst-grp td{color:#fff!important;padding:5px 8px!important;text-align:left!important}
+.fcst-off{background:#FEF2F2}
+.fcst-off td:first-child::before{content:"";display:inline-block;width:5px;height:5px;background:#DC2626;border-radius:50%;margin-right:4px;vertical-align:middle}
+.fcst-gain td:first-child::before{content:"";display:inline-block;width:5px;height:5px;background:#059669;border-radius:50%;margin-right:4px;vertical-align:middle}
+.fcst-sub{background:#F8FAFC}
+.fcst-sub td{color:#475569!important;font-size:10px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:.5px!important;padding:3px 8px!important;text-align:left!important;border-bottom:1px solid #E5E7EB!important}
+.fcst-nofcst{background:#F1F5F9}
+.fcst-nofcst td{color:#475569!important;font-weight:800!important;letter-spacing:.5px!important}
+.vel-badge{display:inline-block;padding:1px 6px;border-radius:10px;font-size:10px;font-weight:800;letter-spacing:.2px}
+.vel-fast{background:#FEF3C7;color:#92400E;border:1px solid #FCD34D}
+.vel-mid{background:#E0F2FE;color:#075985;border:1px solid #7DD3FC}
+.vel-low{background:#F1F5F9;color:#475569;border:1px solid #CBD5E1}
+.col-fr-hdr{background:#EEF2FF!important;color:#3730A3!important;font-size:10.5px!important;font-weight:800!important;border-bottom:2px solid #A5B4FC!important}
+.col-ot-hdr{background:#ECFDF5!important;color:#065F46!important;font-size:10.5px!important;font-weight:800!important;border-bottom:2px solid #6EE7B7!important}
+.col-fr-sub{background:#F5F3FF!important;color:#4C1D95!important}
+.col-ot-sub{background:#F0FDF4!important;color:#14532D!important}
+.g-pos{color:#059669;font-weight:700}
+.g-neg{color:#C00000;font-weight:700}
+.g-flat{color:#6B7280;font-weight:600}
+.fcst-kpi-row{display:grid;grid-template-columns:repeat(4,1fr);background:#F9FAFB;border-bottom:2px solid #E5E7EB}
+.fcst-kpi{padding:10px 14px;border-right:1px solid #E5E7EB}
+.fcst-kpi:last-child{border-right:none}
+.fcst-kpi-lbl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#6B7280;margin-bottom:4px}
+.fcst-kpi-val{font-size:18px;font-weight:800;letter-spacing:-.5px;line-height:1;color:#1F3864}
+.fcst-kpi-sub{font-size:10.5px;color:#6B7280;margin-top:3px}
+.vel-mix{display:flex;gap:5px;margin-top:4px}
+
+/* ── INSIGHTS PAGE ───────────────────────────────────── */
+.ins-hdr{background:#F0F4FF;border-bottom:2px solid #4F46E5;padding:6px 18px;display:flex;align-items:center;gap:10px}
+.ins-kpi-row{display:grid;grid-template-columns:repeat(5,1fr);border-bottom:2px solid #E5E7EB;background:#F9FAFB}
+.ins-kpi{padding:8px 12px;display:flex;align-items:center;gap:8px;border-right:1px solid #E5E7EB}
+.ins-kpi:last-child{border-right:none}
+.ins-charts{display:grid;grid-template-columns:420px 1fr 1fr;border-bottom:1px solid #E5E7EB;min-height:230px}
+.ins-bot{display:grid;grid-template-columns:480px 1fr;border-bottom:1px solid #E5E7EB;min-height:210px}
+.ins-sec{padding:10px 14px;border-right:1px solid #E5E7EB}
+.ins-sec:last-child{border-right:none}
+.ins-sec-hdr{font-size:10px;font-weight:700;color:#1F3864;text-transform:uppercase;letter-spacing:.4px;border-bottom:2px solid #4F46E5;padding-bottom:3px;margin-bottom:8px}
+.cut-tbl{width:100%;border-collapse:collapse;margin-top:4px}
+.cut-tbl th{font-size:10.5px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:.3px;padding:2px 5px;border-bottom:1px solid #E5E7EB;text-align:left}
+.cut-tbl td{font-size:10px;padding:3px 5px;border-bottom:1px solid #F3F4F6;vertical-align:middle}
+.fill-bar{display:inline-block;height:6px;background:#E5E7EB;border-radius:3px;width:50px;vertical-align:middle}
+.fill-inner{display:inline-block;height:6px;border-radius:3px;vertical-align:top}
+.ins-insight{background:#fff;border:1px solid #E5E7EB;border-left:3px solid;border-radius:4px;padding:10px 12px;font-size:10px;line-height:1.5}
+.ins-insights-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:12px 14px;background:#F8FAFC;border-bottom:1px solid #E5E7EB}
+.ins-ins-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px}
+.wk-hot{font-weight:800;color:#1F3864}
+
+/* ── INSIGHTS v2: L4W vs L13W ─────────────────────────── */
+.kpi-comp-row{display:grid;grid-template-columns:repeat(4,1fr);background:#F9FAFB;border-bottom:2px solid #E5E7EB}
+.kpi-comp{padding:10px 14px;border-right:1px solid #E5E7EB}
+.kpi-comp:last-child{border-right:none}
+.kpi-comp-vals{display:flex;align-items:baseline;gap:8px;margin-top:4px;flex-wrap:wrap}
+.kpi-period{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;padding:1px 5px;border-radius:3px;margin-right:2px;vertical-align:middle}
+.kpi-period.l4w{background:#EEF2FF;color:#4F46E5}
+.kpi-period.l13w{background:#E0F2FE;color:#0E7490}
+.kpi-val-lg{font-size:19px;font-weight:800;letter-spacing:-.5px;line-height:1}
+.kpi-val-sm{font-size:13px;font-weight:700;color:#6B7280;line-height:1}
+.delta{font-size:10px;font-weight:800;padding:2px 6px;border-radius:4px}
+.delta-up{color:#059669;background:#D1FAE5}
+.delta-down{color:#C00000;background:#FEE2E2}
+.delta-warn{color:#D97706;background:#FEF3C7}
+.ins-main-grid{display:grid;grid-template-columns:340px 1fr;border-bottom:1px solid #E5E7EB}
+.ins-tm-panel{padding:10px 12px;background:#F8FAFC;border-right:2px solid #E5E7EB;display:flex;flex-direction:column;gap:6px}
+.ins-charts-stack{display:flex;flex-direction:column}
+.ins-chart-row{flex:1;padding:8px 14px;border-bottom:1px solid #E5E7EB;min-height:140px}
+.ins-chart-row:last-child{border-bottom:none}
+.ins-row-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.ins-tbl-row{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid #E5E7EB}
+.ins-tbl-pane{padding:8px 12px;overflow:hidden}
+.ins-data-tbl{width:100%;border-collapse:collapse;font-size:11px;margin-top:3px}
+.ins-data-tbl th{font-size:10px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:.3px;padding:2px 5px;border-bottom:2px solid #E5E7EB;text-align:right;white-space:nowrap}
+.ins-data-tbl th:first-child{text-align:left}
+.ins-data-tbl td{padding:2px 5px;text-align:right;border-bottom:1px solid #F3F4F6;color:#374151;white-space:nowrap}
+.ins-data-tbl td:first-child{text-align:left;font-weight:600;max-width:110px;overflow:hidden;text-overflow:ellipsis}
+.ins-tbl-grp td{background:#F8FAFC;font-size:10px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:3px 5px;border-bottom:1px solid #E5E7EB}
+.fr-badge{display:inline-block;padding:0px 4px;border-radius:2px;font-weight:700;font-size:11px;line-height:1.4}
+.ins-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:3px;vertical-align:middle;flex-shrink:0}
+.tm-btn{font-size:11px;font-weight:700;padding:2px 9px;border:1px solid #CBD5E1;border-radius:10px;cursor:pointer;background:#fff;color:#64748B;transition:all .15s}
+.tm-btn.active{background:#4F46E5;color:#fff;border-color:#4F46E5}
+.per-legend{display:flex;gap:10px;font-size:10.5px;color:#374151;align-items:center}
+.per-dot{width:9px;height:9px;border-radius:2px;display:inline-block;vertical-align:middle;margin-right:3px}
+
+/* readability */
+*{box-sizing:border-box}
+body{overflow-x:hidden;min-width:0}
+.wrapper,#pageMain,#pageInsights,#pageForecast{width:100%;overflow-x:hidden}
+.ins-main-grid{grid-template-columns:28% 72%}
+.ins-data-tbl{font-size:9.5px}
+.ins-data-tbl th{font-size:8.5px;padding:3px 7px}
+.ins-data-tbl td{font-size:9.5px;padding:3px 7px}
+.ins-tbl-grp td{font-size:8px}
+.kpi-comp .kpi-val-lg{font-size:22px}
+.kpi-comp .kpi-val-sm{font-size:14px}
+.fcst-wrap{overflow-x:hidden;padding:8px 14px}
+.fcst-tbl{min-width:0!important;font-size:9.5px;table-layout:fixed;width:100%}
+.fcst-tbl th{font-size:8.5px;padding:4px 8px;word-wrap:break-word}
+.fcst-tbl td{font-size:9.5px;padding:4px 8px;word-wrap:break-word;white-space:normal}
+.fcst-tbl td:first-child{white-space:nowrap;font-weight:700}
+.vel-badge{font-size:8px}
+.fr-badge{font-size:9.5px}
+.ins-sec-hdr{font-size:10.5px!important}
+.ins-hdr span{font-size:9.5px}
+.kpi-lbl{font-size:9px!important}
+.kpi-val{font-size:20px!important}
+.kpi-sub{font-size:8.5px!important}
+.fcst-kpi-lbl{font-size:8.5px}
+.fcst-kpi-val{font-size:20px}
+.fcst-kpi-sub{font-size:8.5px}
+.nav-tab{font-size:10px!important}
+.per-legend span{font-size:8.5px}
+.ins-chart-row{min-height:160px}
+.fn{font-size:8.5px}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ══ HEADER ════════════════════════════════════════════ -->
+<div class="header">
+  <div class="hdr-left">
+    <div class="logo">CPG</div>
+    <div class="hdr-titles">
+      <div class="t1">KRINGLES MARKETS — EXCEPTION SCORECARD</div>
+      <div class="t2">Focus on Exceptions. Take Action. Close the Gap. &nbsp;|&nbsp; Data as of Jun 07, 2026 &nbsp;|&nbsp; Source: Orders_C (PGI Date / MAD) · Plan_C (GS_Fcst as LE)</div>
+    </div>
+  </div>
+  <div class="hdr-filters">
+    <div class="fc"><span class="fc-lbl">Customer</span><span class="fc-val">Kringles Markets</span></div>
+    <div class="fc"><span class="fc-lbl">Month</span><span class="fc-val">Jun 2026 MTD</span></div>
+    <div class="fc"><span class="fc-lbl">Business Unit</span><span class="fc-val">All</span></div>
+    <div class="fc"><span class="fc-lbl">Category</span><span class="fc-val">All</span></div>
+    <div class="fc"><span class="fc-lbl">CDC</span><span class="fc-val">All</span></div>
+  </div>
+</div>
+
+<!-- ══ NAV TABS ═══════════════════════════════════════════ -->
+<div class="nav-tabs">
+  <button class="nav-tab active" id="tab-main" onclick="showPage('main')">&#9654; Exception Scorecard</button>
+  <button class="nav-tab" id="tab-insights" onclick="showPage('insights')">&#128200; Order Pattern Insights</button>
+  <button class="nav-tab" id="tab-forecast" onclick="showPage('forecast')">&#128202; Forecast Trends</button>
+</div>
+
+<div id="pageMain">
+<!-- ══ KPI ROW ════════════════════════════════════════════ -->
+<div class="kpi-row">
+  <div class="kpi-box">
+    <div class="kpi-icon ic-navy">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2" fill="#fff" stroke="none"/></svg>
+    </div>
+    <div>
+      <div class="kpi-lbl">LE Target (June Full Month)</div>
+      <div class="kpi-val c-navy">$1.55M</div>
+      <div class="kpi-sub">$1,549,034 · Plan_C GS_Fcst · Jun 2026</div>
+    </div>
+  </div>
+  <div class="kpi-box">
+    <div class="kpi-icon ic-green">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l2.5 2.5L16 9"/></svg>
+    </div>
+    <div>
+      <div class="kpi-lbl">Shipped MTD (PGI in June)</div>
+      <div class="kpi-val c-green">$32.5K</div>
+      <div class="kpi-sub">2.1% of LE · 1 order confirmed · Jun 01</div>
+    </div>
+  </div>
+  <div class="kpi-box">
+    <div class="kpi-icon ic-teal">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>
+    </div>
+    <div>
+      <div class="kpi-lbl">Open Pipeline (MAD in June)</div>
+      <div class="kpi-val c-teal">$164.1K</div>
+      <div class="kpi-sub">10.6% of LE · 7 orders · $121K blocked</div>
+    </div>
+  </div>
+  <div class="kpi-box">
+    <div class="kpi-icon ic-amber">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><polyline points="22 7 13 16 8 11 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+    </div>
+    <div>
+      <div class="kpi-lbl">Projected Finish (Ship + Pipeline)</div>
+      <div class="kpi-val c-amber">$196.6K</div>
+      <div class="kpi-sub">12.7% of LE · If all pipeline ships</div>
+    </div>
+  </div>
+  <div class="kpi-box">
+    <div class="kpi-icon ic-red">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    </div>
+    <div>
+      <div class="kpi-lbl">Gap to Close (New Orders Needed)</div>
+      <div class="kpi-val c-red">$1.35M</div>
+      <div class="kpi-sub">87.3% of LE · Remaining June demand</div>
+    </div>
+  </div>
+  <div class="kpi-box">
+    <div class="kpi-icon ic-indigo">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    </div>
+    <div>
+      <div class="kpi-lbl">Fill Rate (Shipped Orders)</div>
+      <div class="kpi-val" style="color:#4F46E5">95.5%</div>
+      <div class="kpi-sub">$ fill rate · Jun MTD: 100% · Qty: 90.3%</div>
+    </div>
+  </div>
+  <div class="kpi-box" style="padding:6px 8px;gap:6px">
+    <div style="position:relative;flex-shrink:0;width:74px;height:74px">
+      <canvas id="riskDonut" width="74" height="74"></canvas>
+    </div>
+    <div>
+      <div class="kpi-lbl">Risk Status — MTD Pace</div>
+      <div style="margin-top:4px;font-size:11px;line-height:1.8;color:#374151">
+        <span style="color:#137333;font-weight:800">&#9632;</span> Shipped 2.1%<br>
+        <span style="color:#0E7490;font-weight:800">&#9632;</span> Pipeline 10.6%<br>
+        <span style="color:#FCA5A5;font-weight:800">&#9632;</span> Gap to Pace 10.6%<br>
+        <span style="color:#9CA3AF;font-weight:800">&#9632;</span> Remaining 76.2%
+      </div>
+      <div style="font-size:10.5px;color:#9CA3AF;margin-top:3px">&#9650; Pace marker at 23.3% (Day 7/30)</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SECTIONS 1 & 2 ════════════════════════════════════ -->
+<div class="row12">
+  <!-- Section 1: BU Pipeline vs LE -->
+  <div class="sec">
+    <div class="sec-hdr"><div class="sec-num">1</div>BUSINESS UNIT — Projected vs LE &nbsp;(Shipped + Pipeline)</div>
+    <div class="chart-wrap bu-wrap"><canvas id="buChart"></canvas></div>
+    <div class="bu-legend">
+      <div class="bu-leg"><div class="bu-dot" style="background:#137333"></div>Shipped (PGI June)</div>
+      <div class="bu-leg"><div class="bu-dot" style="background:#0E7490"></div>Pipeline (Unshipped)</div>
+      <div class="bu-leg"><div class="bu-dot" style="background:#E5E7EB"></div>Remaining Gap vs LE</div>
+    </div>
+  </div>
+
+  <!-- Section 2: June MTD Waterfall -->
+  <div class="sec" style="border-right:none">
+    <div class="sec-hdr"><div class="sec-num">2</div>JUNE MTD — Order Book Risk Analysis (vs LE $1,549,034) &nbsp;<span style="font-weight:400;color:#059669;font-size:10px;text-transform:none;letter-spacing:0">✓ Cuts: $0 &nbsp;·&nbsp; Allocations: $0 in June MTD</span></div>
+    <div class="chart-wrap wf-wrap"><canvas id="wfChart"></canvas></div>
+  </div>
+</div>
+
+<!-- ══ SECTION 3: SKU / ORDER EXCEPTIONS ═════════════════ -->
+<div class="sec3">
+  <div class="sec-hdr"><div class="sec-num">3</div>ORDER EXCEPTIONS — June Pipeline Detail (All 8 Orders)</div>
+  <div class="sku-grid">
+
+    <!-- Shipped -->
+    <div>
+      <div class="blk-title bg-green">✔ &nbsp;SHIPPED — Confirmed Revenue</div>
+      <table class="sku-tbl">
+        <thead><tr><th>PO #</th><th>Description</th><th class="r">Value</th><th class="r">PGI Date</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>10720276</td>
+            <td>VIVA SC DR CAS TWL 6PK 86</td>
+            <td class="r g-pos">$32,544</td>
+            <td class="r">Jun 01</td>
+          </tr>
+          <tr>
+            <td colspan="4" style="color:#6B7280;font-size:10px;font-style:italic">No other June shipments confirmed to date</td>
+          </tr>
+          <tr class="sub-row">
+            <td colspan="3"><strong>Total Shipped MTD</strong></td>
+            <td class="r g-pos"><strong>$32,544</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Blocked Pipeline — CRITICAL -->
+    <div>
+      <div class="blk-title bg-red">🔒 &nbsp;BLOCKED PIPELINE — Immediate Action ($121K)</div>
+      <table class="sku-tbl">
+        <thead><tr><th>PO #</th><th>Description</th><th class="r">Value</th><th class="r">MAD</th><th class="r">Status</th></tr></thead>
+        <tbody>
+          <tr class="overdue">
+            <td>10725954</td>
+            <td>SCOTT DR CAS TWL 6PK 108</td>
+            <td class="r g-neg">$20,250</td>
+            <td class="r"><strong>Jun 06</strong></td>
+            <td class="r"><span class="tag tag-red">OVERDUE</span></td>
+          </tr>
+          <tr class="due-today">
+            <td>10726198</td>
+            <td>VIVA SC DR CAS TWL 6PK 86</td>
+            <td class="r g-amb">$10,848</td>
+            <td class="r"><strong>Jun 08</strong></td>
+            <td class="r"><span class="tag tag-amb">48 HRS</span></td>
+          </tr>
+          <tr class="due-today">
+            <td>10726198</td>
+            <td>SCOTT CMFT+ TR BT 12PK 231</td>
+            <td class="r g-amb">$16,200</td>
+            <td class="r"><strong>Jun 08</strong></td>
+            <td class="r"><span class="tag tag-amb">48 HRS</span></td>
+          </tr>
+          <tr class="due-today">
+            <td>10725957</td>
+            <td>COTT ULT CLN MR BT 12PK 284</td>
+            <td class="r g-amb">$61,344</td>
+            <td class="r"><strong>Jun 08</strong></td>
+            <td class="r"><span class="tag tag-amb">48 HRS</span></td>
+          </tr>
+          <tr>
+            <td>10726198</td>
+            <td>KLX UL FT UPR 60 + KLX FLT 120</td>
+            <td class="r g-amb">$12,613</td>
+            <td class="r"><strong>Jun 08</strong></td>
+            <td class="r"><span class="tag tag-amb">48 HRS</span></td>
+          </tr>
+          <tr class="sub-row">
+            <td colspan="2"><strong>Total Blocked</strong></td>
+            <td class="r g-neg"><strong>$121,256</strong></td>
+            <td class="r"><strong>5 orders</strong></td>
+            <td class="r"><strong>74% of pipe</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Clear Pipeline -->
+    <div>
+      <div class="blk-title bg-teal">⚡ &nbsp;CLEAR PIPELINE — Ship TODAY + Gap to Secure</div>
+      <table class="sku-tbl">
+        <thead><tr><th>PO #</th><th>Description</th><th class="r">Value</th><th class="r">MAD</th><th class="r">Status</th></tr></thead>
+        <tbody>
+          <tr class="due-today">
+            <td>10726200</td>
+            <td>SCOTT BT 12PK 1000</td>
+            <td class="r g-teal">$42,840</td>
+            <td class="r"><strong>Jun 07</strong></td>
+            <td class="r"><span class="tag tag-grn">TODAY</span></td>
+          </tr>
+          <tr style="background:#F9FAFB">
+            <td colspan="5" style="padding:6px;color:#6B7280;font-size:10px;text-align:center;font-style:italic">— &nbsp;Gap remaining: $1,352,394 in new orders still needed for June &nbsp;—</td>
+          </tr>
+          <tr class="sub-row">
+            <td colspan="2"><strong>Clear Pipeline</strong></td>
+            <td class="r g-teal"><strong>$42,840</strong></td>
+            <td class="r"><strong>1 order</strong></td>
+            <td class="r"><strong>26% of pipe</strong></td>
+          </tr>
+          <tr class="sub-row" style="background:#FEF2F2">
+            <td colspan="2" style="color:#C00000"><strong>Still to Secure (Gap)</strong></td>
+            <td class="r g-neg"><strong>$1,352,394</strong></td>
+            <td colspan="2" class="r g-neg"><strong>87.3% of LE</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+  <div class="sku-note">
+    Actual Sales = Orders_C where PGI Date in June 2026 &nbsp;|&nbsp; Pipeline = Orders_C where MAD (Planned Ship Date) in June 2026 &nbsp;|&nbsp; LE = Plan_C GS_Fcst June 2026 &nbsp;|&nbsp;
+    🔒 = Delivery block active — block must be released before shipment can occur &nbsp;|&nbsp; All June rejections = $0 (no rejections logged in June orders yet)
+  </div>
+</div>
+
+<!-- ══ SECTION 4: ACTION PRIORITY ════════════════════════ -->
+<div class="sec4">
+  <div class="sec-hdr"><div class="sec-num">4</div>ACTION PRIORITY LIST — FOCUS ON 4 ITEMS &nbsp;|&nbsp; Window: Next 48 Hours Critical</div>
+  <table class="act-tbl">
+    <thead>
+      <tr>
+        <th style="width:46px;text-align:center">Priority</th>
+        <th style="width:190px">Exception</th>
+        <th style="width:90px;text-align:center">Type</th>
+        <th style="width:145px">Value</th>
+        <th>Recommended Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="background:#FEF2F2">
+        <td style="text-align:center"><span class="pbadge p1">1</span></td>
+        <td><strong>SCOTT DR CAS TWL 6PK</strong><br><span style="font-size:10px;color:#C00000">PO 10725954 · MAD Jun 06 · OVERDUE</span></td>
+        <td style="text-align:center"><span class="tbadge t-crit">CRITICAL</span></td>
+        <td class="g-neg">$20,250 at risk</td>
+        <td>Delivery block must be released <strong>NOW</strong> — MAD passed Jun 06. Contact Customer Service immediately to release ZD block and coordinate emergency pickup with Kringles DC. Risk of order cancellation if not resolved today.</td>
+      </tr>
+      <tr style="background:#FFFBEB">
+        <td style="text-align:center"><span class="pbadge p2">2</span></td>
+        <td><strong>SCOTT BT 12PK 1000</strong><br><span style="font-size:10px;color:#D97706">PO 10726200 · MAD Jun 07 · DUE TODAY</span></td>
+        <td style="text-align:center"><span class="tbadge t-exec">EXECUTION</span></td>
+        <td class="g-amb">$42,840 in-flight</td>
+        <td>No block on this order — confirm with warehouse that shipment is staged and will PGI today. If not shipped by end of day, escalate to logistics supervisor. This is the only unblocked pipeline order.</td>
+      </tr>
+      <tr>
+        <td style="text-align:center"><span class="pbadge p3">3</span></td>
+        <td><strong>4 Blocked Orders — Jun 08</strong><br><span style="font-size:10px;color:#D97706">POs 10725957, 10726198 · COTT + SCOTT + KLX + VIVA</span></td>
+        <td style="text-align:center"><span class="tbadge t-exec">EXECUTION</span></td>
+        <td class="g-amb">$100,405 at risk</td>
+        <td>Release delivery blocks on POs 10725957 and 10726198 before end of business today — MAD is Jun 08. COTT ULT CLN MR ($61K) is the largest. Coordinate appointment confirmation with Kringles DC. All 4 must PGI by Jun 08 to count in June revenue.</td>
+      </tr>
+      <tr>
+        <td style="text-align:center"><span class="pbadge p4">4</span></td>
+        <td><strong>Gap to Close — New Orders</strong><br><span style="font-size:10px;color:#2E75B6">Remainder of June · All BUs</span></td>
+        <td style="text-align:center"><span class="tbadge t-sales">SALES</span></td>
+        <td class="g-neg">$1,352,394 needed</td>
+        <td>Even if all current pipeline ships, we reach only 12.7% of June LE. Engage Kringles buyer this week to review the June replenishment schedule across AFC ($218K LE) and B&amp;CC ($235K LE) — no orders on file yet for these BUs. Confirm weekly order cadence for remainder of month.</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="fn">
+    Actual Sales: Orders_C · PGI Date in June 2026 &nbsp;|&nbsp; Pipeline: Orders_C · Current Planned Ship Date (MAD) in June 2026 &nbsp;|&nbsp; LE: Plan_C · GS_Fcst · Calendar_Month = Jun 2026 &nbsp;|&nbsp;
+    Gap to Close = LE − Shipped − Pipeline &nbsp;|&nbsp; Projected = Shipped + Pipeline (assumes 100% pipeline execution) &nbsp;|&nbsp; All monetary values are Order_Val (gross)
+  </div>
+</div>
+</div><!-- /pageMain -->
+
+<!-- ══ PAGE 2: ORDER PATTERN INSIGHTS ═══════════════════ -->
+<div id="pageInsights" style="display:none">
+
+  <!-- sub-header -->
+  <div class="ins-hdr">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="2.5" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    <span style="font-size:11px;font-weight:800;color:#4F46E5;text-transform:uppercase;letter-spacing:.5px">Order Pattern Insights</span>
+    <span style="font-size:10px;color:#6B7280;margin-left:8px">L4W: May 10 &ndash; Jun 07 &nbsp;&middot;&nbsp; L13W: Mar 08 &ndash; Jun 07 &nbsp;&middot;&nbsp; 1,112 shipped lines &nbsp;&middot;&nbsp; Click treemap tile to filter charts</span>
+    <span id="filterBadge" style="margin-left:auto;font-size:11px;padding:2px 10px;border-radius:10px;background:#E5E7EB;color:#6B7280;font-weight:700;cursor:pointer" onclick="clearFilter()">All Categories</span>
+  </div>
+
+  <!-- KPI COMPARISON ROW -->
+  <div class="kpi-comp-row">
+    <div class="kpi-comp">
+      <div class="kpi-lbl">Fill Rate &mdash; Overall</div>
+      <div class="kpi-comp-vals">
+        <div><span class="kpi-period l4w">L4W</span><span class="kpi-val-lg" style="color:#C00000">94.6%</span></div>
+        <div><span class="kpi-period l13w">L13W</span><span class="kpi-val-sm">95.4%</span></div>
+        <span class="delta delta-down">&#8595; &minus;0.8pp</span>
+      </div>
+      <div class="kpi-sub">AFC dropped 6.7pp &mdash; Depend &amp; Cottonelle driving cuts</div>
+    </div>
+    <div class="kpi-comp">
+      <div class="kpi-lbl">OTIF &mdash; On-Time In-Full</div>
+      <div class="kpi-comp-vals">
+        <div><span class="kpi-period l4w">L4W</span><span class="kpi-val-lg" style="color:#059669">45.8%</span></div>
+        <div><span class="kpi-period l13w">L13W</span><span class="kpi-val-sm">36.9%</span></div>
+        <span class="delta delta-up">&#8593; +8.9pp</span>
+      </div>
+      <div class="kpi-sub">Improving trend &mdash; B&amp;CC still lowest at 31.5%</div>
+    </div>
+    <div class="kpi-comp">
+      <div class="kpi-lbl">Avg Delivery Delay</div>
+      <div class="kpi-comp-vals">
+        <div><span class="kpi-period l4w">L4W</span><span class="kpi-val-lg" style="color:#059669">0.9d</span></div>
+        <div><span class="kpi-period l13w">L13W</span><span class="kpi-val-sm">1.2d</span></div>
+        <span class="delta delta-up">&#8593; &minus;0.3d</span>
+      </div>
+      <div class="kpi-sub">Fewer 2&ndash;3d late orders in recent weeks</div>
+    </div>
+    <div class="kpi-comp">
+      <div class="kpi-lbl">Value Cut Rate</div>
+      <div class="kpi-comp-vals">
+        <div><span class="kpi-period l4w">L4W</span><span class="kpi-val-lg" style="color:#C00000">5.4%</span></div>
+        <div><span class="kpi-period l13w">L13W</span><span class="kpi-val-sm">4.6%</span></div>
+        <span class="delta delta-down">&#8595; +0.8pp</span>
+      </div>
+      <div class="kpi-sub">Wk2 now 48% of L4W value &mdash; up from 35.5% in L13W</div>
+    </div>
+  </div>
+
+  <!-- MAIN GRID: Treemap LEFT + Charts RIGHT -->
+  <div class="ins-main-grid" style="">
+
+    <!-- TREEMAP PANEL -->
+    <div class="ins-tm-panel">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div class="ins-sec-hdr" style="margin-bottom:0;border-bottom:none;font-size:10px">Value Map &mdash; Brand Fill Rate</div>
+        <div style="display:flex;gap:4px">
+          <button class="tm-btn active" id="tmL13w" onclick="setTMPeriod('l13w')">L13W</button>
+          <button class="tm-btn" id="tmL4w" onclick="setTMPeriod('l4w')">L4W</button>
+        </div>
+      </div>
+      <div style="position:relative;flex:1;min-height:295px">
+        <canvas id="treemapChart"></canvas>
+      </div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap">
+        <span style="font-size:10.5px;color:#374151;font-weight:700">Fill Rate:</span>
+        <span style="font-size:10.5px"><span style="background:#D1FAE5;color:#065F46;padding:1px 5px;border-radius:2px;font-weight:700">&ge;95% Good</span></span>
+        <span style="font-size:10.5px"><span style="background:#FEF3C7;color:#92400E;padding:1px 5px;border-radius:2px;font-weight:700">85&ndash;95%</span></span>
+        <span style="font-size:10.5px"><span style="background:#FEE2E2;color:#7F1D1D;padding:1px 5px;border-radius:2px;font-weight:700">&lt;85% Risk</span></span>
+      </div>
+      <div style="font-size:10.5px;color:#9CA3AF">Click a tile to filter charts &rarr; &nbsp;|&nbsp; Size = shipped value</div>
+    </div>
+
+    <!-- CHARTS STACK -->
+    <div class="ins-charts-stack">
+
+      <!-- Fill Rate + On-Time side-by-side tables -->
+      <div class="ins-tbl-row">
+
+        <!-- LEFT: Fill Rate Table -->
+        <div class="ins-tbl-pane" style="border-right:2px solid #E5E7EB">
+          <div class="ins-row-hdr">
+            <div class="ins-sec-hdr" style="margin-bottom:0;border-bottom:none">
+              Fill Rate &mdash; by Product
+              <span id="frFilterLbl" style="font-size:10.5px;color:#4F46E5;font-weight:600;text-transform:none;letter-spacing:0"></span>
+            </div>
+            <div class="per-legend">
+              <span style="color:#C00000;font-weight:700;font-size:10px">&#9632; &lt;85% Risk</span>
+              <span style="color:#D97706;font-weight:700;font-size:10px">&#9632; 85&ndash;95%</span>
+              <span style="color:#059669;font-weight:700;font-size:10px">&#9632; &ge;95% Good</span>
+              <span style="font-size:10px;color:#9CA3AF">sorted by value &darr;</span>
+            </div>
+          </div>
+          <div id="frTableWrap"></div>
+        </div>
+
+        <!-- RIGHT: On-Time Table -->
+        <div class="ins-tbl-pane">
+          <div class="ins-row-hdr">
+            <div class="ins-sec-hdr" style="margin-bottom:0;border-bottom:none">
+              On-Time &mdash; by Product
+              <span id="otifFilterLbl" style="font-size:10.5px;color:#4F46E5;font-weight:600;text-transform:none;letter-spacing:0"></span>
+            </div>
+            <div class="per-legend">
+              <span style="color:#C00000;font-weight:700;font-size:10px">&#9632; &lt;35%</span>
+              <span style="color:#D97706;font-weight:700;font-size:10px">&#9632; 35&ndash;55%</span>
+              <span style="color:#059669;font-weight:700;font-size:10px">&#9632; &ge;55%</span>
+              <span style="font-size:10px;color:#9CA3AF">sorted by value &darr;</span>
+            </div>
+          </div>
+          <div id="otTableWrap"></div>
+        </div>
+
+      </div>
+
+      <!-- Week Concentration -->
+      <div class="ins-chart-row" style="border-bottom:none">
+        <div class="ins-row-hdr">
+          <div class="ins-sec-hdr" style="margin-bottom:0;border-bottom:none">Weekly Concentration &mdash; Value % by Week</div>
+          <div class="per-legend">
+            <span><span class="per-dot" style="background:#4F46E5"></span>L4W</span>
+            <span><span class="per-dot" style="background:#93C5FD"></span>L13W</span>
+            <span style="color:#C00000;font-weight:700;font-size:10px">Wk2: 48% L4W vs 35% L13W</span>
+          </div>
+        </div>
+        <div style="position:relative;height:108px"><canvas id="weekCompChart"></canvas></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ACTIONABLE INSIGHTS -->
+  <div class="ins-insights-row">
+    <div class="ins-insight" style="border-left-color:#C00000">
+      <div class="ins-ins-title" style="color:#C00000">&#8595; AFC Fill Rate Alert &mdash; Depend Declining</div>
+      AFC fill rate dropped <strong>6.7pp in L4W</strong> (99.6% L13W &rarr; 92.9% L4W). Depend alone fell from <strong>98.2% to 88.7%</strong> (&minus;9.5pp). Cottonelle (FC) also dropped 7.6pp (88.6% &rarr; 81.0%). Both are driven by backorder (01) and allocation (ZC) rejection codes increasing in recency.
+      <div style="margin-top:5px;padding:4px 6px;background:#FEE2E2;border-radius:3px;font-size:10.5px;color:#C00000;font-weight:700">ACTION: Run L4W order audit on Depend (29 lines, $87K) and Cottonelle (4 lines, $36K) &mdash; identify ZC/01 root cause. Engage AFC/FC supply teams before next order cycle.</div>
+    </div>
+    <div class="ins-insight" style="border-left-color:#059669">
+      <div class="ins-ins-title" style="color:#059669">&#8679; OTIF Improving &mdash; Sustain the Momentum</div>
+      OTIF improved <strong>+8.9pp in L4W</strong> (36.9% &rarr; 45.8%) across all BUs. FC leads at 51.7% (+11.9pp), AFC at 49.3% (+10.9pp). Average delay also fell from 1.2d to 0.9d. B&amp;CC (Huggies) remains the laggard at 31.5% &mdash; same as L13W.
+      <div style="margin-top:5px;padding:4px 6px;background:#D1FAE5;border-radius:3px;font-size:10.5px;color:#065F46;font-weight:700">ACTION: Sustain CPU appointment confirmation discipline. Focus Huggies B&amp;CC on same-day appointment releases &mdash; target 45% OTIF in next L4W.</div>
+    </div>
+    <div class="ins-insight" style="border-left-color:#D97706">
+      <div class="ins-ins-title" style="color:#D97706">&#128197; Wk2 Concentration Risk &mdash; Compressed Execution Window</div>
+      Week 2 (Days 8&ndash;14) now carries <strong>48.2% of L4W value</strong>, up from 35.5% in L13W (+12.7pp). Week 4 dropped from 34.2% to 17.3% in L4W &mdash; orders are front-loaded into Week 2, creating a 7-day execution crunch with multiple simultaneous CPU appointments.
+      <div style="margin-top:5px;padding:4px 6px;background:#FEF3C7;border-radius:3px;font-size:10.5px;color:#92400E;font-weight:700">ACTION: Negotiate with buyer to spread Week 4 orders earlier. Pre-confirm appointment windows 5+ days before Week 2 start. Monitor daily PGI vs appointment in Weeks 2 &amp; 4.</div>
+    </div>
+  </div>
+
+  <div class="fn" style="padding:5px 14px">
+    L4W = May 10&ndash;Jun 07, 2026 (4 wks) &nbsp;|&nbsp; L13W = Mar 08&ndash;Jun 07, 2026 (13 wks) &nbsp;|&nbsp; Fill Rate = Confirmed_Val / Original_Val &nbsp;|&nbsp; OTIF = PGI Date &le; Apt Day &nbsp;|&nbsp; Treemap size = shipped value &nbsp;|&nbsp; Source: Orders_C
+  </div>
+
+</div><!-- /pageInsights -->
+
+<div id="pageForecast" style="display:none">
+
+  <!-- sub-header -->
+  <div class="ins-hdr">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/><line x1="2" y1="4" x2="22" y2="4"/></svg>
+    <span style="font-size:11px;font-weight:800;color:#059669;text-transform:uppercase;letter-spacing:.5px">Forecast Trends</span>
+    <span style="font-size:10px;color:#6B7280;margin-left:8px">L4W: May 10&ndash;Jun 07 &nbsp;&middot;&nbsp; L13W: Mar 08&ndash;Jun 07 &nbsp;&middot;&nbsp; Jun 2026 LE vs Shipment Performance &nbsp;&middot;&nbsp; 7 Products across 3 BUs</span>
+  </div>
+
+  <!-- KPI OVERVIEW ROW -->
+  <div class="fcst-kpi-row">
+    <div class="fcst-kpi">
+      <div class="fcst-kpi-lbl">June Forecast Status</div>
+      <div style="display:flex;align-items:baseline;gap:8px;margin-top:4px">
+        <span class="fcst-kpi-val" style="color:#1F3864">6</span>
+        <span style="font-size:11px;font-weight:700;color:#059669">Forecasted</span>
+        <span class="fcst-kpi-val" style="color:#6B7280;font-size:14px">1</span>
+        <span style="font-size:11px;font-weight:700;color:#9CA3AF">Not Fcst</span>
+      </div>
+      <div class="fcst-kpi-sub">Cottonelle &middot; Huggies &middot; Depend &middot; Viva &middot; Kleenex &middot; Scott &nbsp;|&nbsp; U by Kotex: no Jun plan</div>
+    </div>
+    <div class="fcst-kpi">
+      <div class="fcst-kpi-lbl">Velocity Mix</div>
+      <div class="vel-mix">
+        <span class="vel-badge vel-fast">&#9889; Fast &times;2</span>
+        <span class="vel-badge vel-mid">&#8767; Mid &times;4</span>
+        <span class="vel-badge vel-low">&#128034; Low &times;1</span>
+      </div>
+      <div class="fcst-kpi-sub" style="margin-top:5px">Fast &ge;$40K/wk avg &nbsp;&middot;&nbsp; Mid $15&ndash;40K &nbsp;&middot;&nbsp; Low &lt;$15K (L13W basis)</div>
+    </div>
+    <div class="fcst-kpi">
+      <div class="fcst-kpi-lbl">Wtd Avg Fill Rate</div>
+      <div style="display:flex;align-items:baseline;gap:6px;margin-top:4px">
+        <span class="fcst-kpi-val" style="color:#D97706">90.1%</span>
+        <span style="font-size:10.5px;color:#C00000;font-weight:700">L4W &darr;</span>
+      </div>
+      <div class="fcst-kpi-sub">L13W: 92.9% &nbsp;&middot;&nbsp; <span style="color:#C00000;font-weight:700">&Delta; &minus;2.8pp</span> &nbsp;&middot;&nbsp; Target: 95%</div>
+    </div>
+    <div class="fcst-kpi">
+      <div class="fcst-kpi-lbl">Wtd Avg On-Time</div>
+      <div style="display:flex;align-items:baseline;gap:6px;margin-top:4px">
+        <span class="fcst-kpi-val" style="color:#059669">47.1%</span>
+        <span style="font-size:10.5px;color:#059669;font-weight:700">L4W &uarr;</span>
+      </div>
+      <div class="fcst-kpi-sub">L13W: 37.7% &nbsp;&middot;&nbsp; <span style="color:#059669;font-weight:700">&Delta; +9.4pp</span> &nbsp;&middot;&nbsp; Target: 50%</div>
+    </div>
+  </div>
+
+  <!-- MATRIX TABLE CONTAINER -->
+  <div class="fcst-wrap">
+    <table class="fcst-tbl">
+      <thead>
+        <tr>
+          <th rowspan="2" style="text-align:left;min-width:90px">Product</th>
+          <th rowspan="2">BU</th>
+          <th rowspan="2">Velocity</th>
+          <th rowspan="2">L4W Val</th>
+          <th colspan="4" class="col-fr-hdr">&#9472; Fill Rate &#9472;</th>
+          <th colspan="4" class="col-ot-hdr">&#9472; On-Time &#9472;</th>
+          <th rowspan="2" style="min-width:70px;font-size:10px;color:#6B7280">Key Risk /<br>Opportunity</th>
+        </tr>
+        <tr>
+          <th class="col-fr-sub">L4W %</th>
+          <th class="col-fr-sub">L13W %</th>
+          <th class="col-fr-sub">Gap vs 95%</th>
+          <th class="col-fr-sub">Trend &Delta;pp</th>
+          <th class="col-ot-sub">L4W %</th>
+          <th class="col-ot-sub">L13W %</th>
+          <th class="col-ot-sub">Gap vs 50%</th>
+          <th class="col-ot-sub">Trend &Delta;pp</th>
+        </tr>
+      </thead>
+      <tbody id="fcstBody">
+        <!-- JS populated -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PERFORMANCE GAP LEGEND -->
+  <div class="fn" style="padding:5px 14px;display:flex;gap:20px;flex-wrap:wrap">
+    <span><strong>Gap vs 95% (FR):</strong> L4W FR% &minus; 95% target</span>
+    <span><strong>Gap vs 50% (OT):</strong> L4W OT% &minus; 50% target</span>
+    <span><strong>Trend &Delta;pp:</strong> L4W% &minus; L13W% (positive = improving)</span>
+    <span><strong>Velocity:</strong> &#9889;Fast &ge;$40K/wk &nbsp;|&nbsp; &#8767;Mid $15&ndash;40K &nbsp;|&nbsp; &#128034;Low &lt;$15K (L13W avg weekly shipped value)</span>
+    <span><strong>Forecast:</strong> has Jun 2026 LE/open order &nbsp;|&nbsp; Source: Orders_C + Plan_C GS_Fcst</span>
+  </div>
+
+</div><!-- /pageForecast -->
+
+</div><!-- /page -->
+
+<script>
+Chart.register(ChartDataLabels);
+
+const fmtM = v => {
+  const a = Math.abs(v);
+  const s = a >= 1e6 ? '$'+(a/1e6).toFixed(2)+'M' : a >= 1000 ? '$'+Math.round(a/1000)+'K' : '$'+a;
+  return v < 0 ? '('+s+')' : s;
+};
+
+// ── SECTION 1: BU STACKED BAR (Shipped + Pipeline + Gap) ──────────────────
+const buCtx = document.getElementById('buChart').getContext('2d');
+// BU: FC, AFC, B&CC
+// FC:  shipped $32,544 | pipeline $164,096 | LE $1,096,445
+// AFC: shipped $0      | pipeline $0       | LE $217,574
+// B&CC:shipped $0      | pipeline $0       | LE $235,014
+const buLE      = [1096445, 217574, 235014];
+const buShipped = [32544,   0,      0];
+const buPipe    = [164096,  0,      0];
+const buGap     = buLE.map((le, i) => le - buShipped[i] - buPipe[i]);
+
+new Chart(buCtx, {
+  type: 'bar',
+  data: {
+    labels: ['Family Care (FC)', 'Adult & Fem. Care', 'Baby & Child Care'],
+    datasets: [
+      {
+        label: 'Shipped',
+        data: buShipped,
+        backgroundColor: '#137333',
+        borderWidth: 0,
+        borderRadius: { topLeft: 0, topRight: 0, bottomLeft: 2, bottomRight: 2 },
+        stack: 'bu'
+      },
+      {
+        label: 'Pipeline',
+        data: buPipe,
+        backgroundColor: '#0E7490',
+        borderWidth: 0,
+        stack: 'bu'
+      },
+      {
+        label: 'Gap vs LE',
+        data: buGap,
+        backgroundColor: '#E5E7EB',
+        borderWidth: 1,
+        borderColor: '#D1D5DB',
+        borderRadius: { topLeft: 2, topRight: 2, bottomLeft: 0, bottomRight: 0 },
+        stack: 'bu'
+      }
+    ]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    layout: { padding: { right: 70, left: 4, top: 2 } },
+    plugins: {
+      legend: { display: false },
+      tooltip: { enabled: false },
+      datalabels: {
+        display: ctx => {
+          const v = ctx.dataset.data[ctx.dataIndex];
+          return ctx.datasetIndex === 2 && v > 0;
+        },
+        anchor: 'end', align: 'end',
+        formatter: (v, ctx) => {
+          const le = buLE[ctx.dataIndex];
+          const proj = buShipped[ctx.dataIndex] + buPipe[ctx.dataIndex];
+          const pct = (proj / le * 100).toFixed(0);
+          return pct + '% covered · ' + fmtM(v) + ' gap';
+        },
+        color: '#6B7280',
+        font: { family: 'Segoe UI', size: 8, weight: '600' }
+      }
+    },
+    scales: {
+      x: {
+        stacked: true,
+        grid: { color: '#E5E7EB' },
+        ticks: {
+          callback: v => v >= 1e6 ? '$'+(v/1e6).toFixed(1)+'M' : v >= 1000 ? '$'+(v/1000).toFixed(0)+'K' : '$'+v,
+          font: { size: 7.5 }, color: '#6B7280'
+        },
+        border: { display: false }
+      },
+      y: {
+        stacked: true,
+        grid: { display: false },
+        ticks: { font: { size: 9.5, weight: '600' }, color: '#1F2937' },
+        border: { display: false }
+      }
+    }
+  }
+});
+
+// ── SECTION 2: ORDER BOOK RISK ANALYSIS ──────────────────────────────────
+// LE → Shipped → Open Confirmed (Clear) → Open Confirmed (Blocked) → Cancelled (Z2) → Gap
+const wfCtx = document.getElementById('wfChart').getContext('2d');
+
+const LE        = 1549034;
+const shipped   = 32544;
+const pClear    = 42840;   // SCOTT BT — Open Confirmed, no block
+const pBlocked  = 121256;  // 6 orders blocked by ZD (CPU Appt)
+const cancelled = 34870;   // Z2 - Customer Cancellation (no MAD date, account-level)
+const gap       = LE - shipped - pClear - pBlocked - cancelled; // 1,317,524
+
+// Floating bar [bottom, top]
+const s1 = LE - shipped;
+const s2 = s1 - pClear;
+const s3 = s2 - pBlocked;
+const s4 = s3 - cancelled;
+const wfData = [
+  [0,  LE],          // LE Target
+  [s1, LE],          // Shipped drop
+  [s2, s1],          // Open Confirmed – Clear
+  [s3, s2],          // Open Confirmed – CPU Blocked
+  [s4, s3],          // Cancelled (Z2)
+  [0,  s4],          // Gap – No PO in Hand
+];
+const wfColors  = ['#2E75B6','#137333','#0E7490','#D97706','#DC2626','#C00000'];
+const wfDLbls   = [
+  '$1,549,034',
+  '+$32,544 shipped',
+  '+$42,840 confirmed',
+  '+$121,256 (CPU blocked)',
+  '$34,870 cancelled (Z2)',
+  '$1,317,524 gap – no PO'
+];
+const wfDColors = ['#2E75B6','#137333','#0E7490','#D97706','#DC2626','#C00000'];
+
+new Chart(wfCtx, {
+  type: 'bar',
+  data: {
+    labels: ['LE Target','Shipped\n(PGI Jun)','Open Confirmed\n(Clear)','Open Confirmed\n(CPU Blocked)','Cancelled\n(Z2)','Gap –\nNo PO'],
+    datasets: [{
+      data: wfData,
+      backgroundColor: wfColors,
+      borderWidth: 0,
+      borderRadius: 2
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    layout: { padding: { top: 26, left: 4, right: 4 } },
+    plugins: {
+      legend: { display: false },
+      tooltip: { enabled: false },
+      datalabels: {
+        anchor: 'end', align: 'top',
+        formatter: (v, ctx) => wfDLbls[ctx.dataIndex],
+        color: ctx => wfDColors[ctx.dataIndex],
+        font: { family: 'Segoe UI', size: 8.5, weight: '700' }
+      }
+    },
+    scales: {
+      x: {
+        grid: { display: false },
+        ticks: { font: { size: 8.5, weight: '600' }, color: '#1F2937', maxRotation: 0 },
+        border: { display: false }
+      },
+      y: {
+        min: 0, max: 1750000,
+        grid: { color: '#E5E7EB' },
+        ticks: {
+          callback: v => '$'+(v/1e6).toFixed(1)+'M',
+          font: { size: 7.5 }, color: '#6B7280',
+          stepSize: 250000
+        },
+        border: { display: false }
+      }
+    }
+  }
+});
+
+/* ── PAGE TOGGLE ───────────────────────────────────────── */
+function showPage(page) {
+  document.getElementById('pageMain').style.display     = page === 'main'     ? '' : 'none';
+  document.getElementById('pageInsights').style.display = page === 'insights' ? '' : 'none';
+  document.getElementById('pageForecast').style.display = page === 'forecast' ? '' : 'none';
+  document.getElementById('tab-main').classList.toggle('active',     page === 'main');
+  document.getElementById('tab-insights').classList.toggle('active', page === 'insights');
+  document.getElementById('tab-forecast').classList.toggle('active', page === 'forecast');
+  if (page === 'insights' && !window._insInited) { window._insInited = true; initInsightsCharts(); }
+  if (page === 'forecast' && !window._fcstInited){ window._fcstInited = true; initForecastPage(); }
+}
+
+/* ── INSIGHTS DATA ──────────────────────────────────────── */
+const INS = {
+  bu: {
+    'FC'  : { fr:{ l4w:99.4, l13w:97.5 }, otif:{ l4w:51.7, l13w:39.8 }, delay:{ l4w:0.8, l13w:1.0 } },
+    'AFC' : { fr:{ l4w:92.9, l13w:99.6 }, otif:{ l4w:49.3, l13w:38.4 }, delay:{ l4w:0.7, l13w:1.0 } },
+    'B&CC': { fr:{ l4w:86.3, l13w:83.7 }, otif:{ l4w:31.5, l13w:30.7 }, delay:{ l4w:1.0, l13w:1.1 } }
+  },
+  brand: {
+    'Cottonelle' : { bu:'FC',   fr:{ l4w:81.0, l13w:88.6 }, otif:{ l4w:null, l13w:null }, val:{ l4w:36176,  l13w:694019 } },
+    'Kleenex'    : { bu:'FC',   fr:{ l4w:99.7, l13w:99.7 }, otif:{ l4w:null, l13w:null }, val:{ l4w:104037, l13w:325497 } },
+    'Viva'       : { bu:'FC',   fr:{ l4w:98.9, l13w:99.7 }, otif:{ l4w:null, l13w:null }, val:{ l4w:96115,  l13w:345403 } },
+    'Scott'      : { bu:'FC',   fr:{ l4w:100,  l13w:98.4 }, otif:{ l4w:null, l13w:null }, val:{ l4w:42840,  l13w:240696 } },
+    'Huggies'    : { bu:'B&CC', fr:{ l4w:86.3, l13w:83.7 }, otif:{ l4w:31.5, l13w:30.7 }, val:{ l4w:142276, l13w:533974 } },
+    'Depend'     : { bu:'AFC',  fr:{ l4w:88.7, l13w:98.2 }, otif:{ l4w:null, l13w:null }, val:{ l4w:87157,  l13w:415680 } },
+    'U by Kotex' : { bu:'AFC',  fr:{ l4w:100,  l13w:91.9 }, otif:{ l4w:null, l13w:null }, val:{ l4w:13098,  l13w:47492  } }
+  },
+  treeItems: [
+    { bu:'FC',   brand:'Cottonelle', l13wVal:694019, l4wVal:36176,  l13wFR:88.6, l4wFR:81.0  },
+    { bu:'B&CC', brand:'Huggies',    l13wVal:533974, l4wVal:142276, l13wFR:83.7, l4wFR:86.3  },
+    { bu:'AFC',  brand:'Depend',     l13wVal:415680, l4wVal:87157,  l13wFR:98.2, l4wFR:88.7  },
+    { bu:'FC',   brand:'Viva',       l13wVal:345403, l4wVal:96115,  l13wFR:99.7, l4wFR:98.9  },
+    { bu:'FC',   brand:'Kleenex',    l13wVal:325497, l4wVal:104037, l13wFR:99.7, l4wFR:99.7  },
+    { bu:'FC',   brand:'Scott',      l13wVal:240696, l4wVal:42840,  l13wFR:98.4, l4wFR:100.0 },
+    { bu:'AFC',  brand:'U by Kotex', l13wVal:47492,  l4wVal:13098,  l13wFR:91.9, l4wFR:100.0 }
+  ],
+  weeks: {
+    l4w:  [4.8, 48.2, 19.2, 17.3, 10.4],
+    l13w: [3.3, 35.5, 17.1, 34.2,  9.9]
+  }
+};
+
+/* ── FILTER STATE ───────────────────────────────────────── */
+let _filter = { bu: null, brand: null };
+let _tmPeriod = 'l13w';
+let _charts = {};
+
+function frColor(fr) { return fr >= 95 ? '#D1FAE5' : fr >= 85 ? '#FEF3C7' : '#FEE2E2'; }
+function frBorder(fr){ return fr >= 95 ? '#059669' : fr >= 85 ? '#D97706' : '#DC2626'; }
+function frText(fr)  { return fr >= 95 ? '#065F46' : fr >= 85 ? '#92400E' : '#7F1D1D'; }
+
+function clearFilter() {
+  _filter = { bu: null, brand: null };
+  applyFilter();
+}
+function setFilter(f) { _filter = f; applyFilter(); }
+
+/* ── BRAND META (all brands, value descending for table sort) ── */
+const BRAND_META = [
+  { key:'Cottonelle', label:'Cottonelle',   bu:'FC',   buColor:'#4F46E5',
+    frL4w:81.0,  frL13w:88.6, otL4w:51.7, otL13w:39.8, delayL4w:0.8, delayL13w:1.0,
+    valL13w:694019, valL4w:36176,  csL13w:38.6, csL4w:2.0 },
+  { key:'Huggies',   label:'Huggies',       bu:'B&CC', buColor:'#0E7490',
+    frL4w:86.3,  frL13w:83.7, otL4w:31.5, otL13w:30.7, delayL4w:1.0, delayL13w:1.1,
+    valL13w:533974, valL4w:142276, csL13w:35.6, csL4w:9.5 },
+  { key:'Depend',    label:'Depend',         bu:'AFC',  buColor:'#059669',
+    frL4w:88.7,  frL13w:98.2, otL4w:49.3, otL13w:38.4, delayL4w:0.7, delayL13w:1.0,
+    valL13w:415680, valL4w:87157,  csL13w:34.7, csL4w:7.3 },
+  { key:'Viva',      label:'Viva',           bu:'FC',   buColor:'#4F46E5',
+    frL4w:98.9,  frL13w:99.7, otL4w:51.7, otL13w:39.8, delayL4w:0.8, delayL13w:1.0,
+    valL13w:345403, valL4w:96115,  csL13w:19.2, csL4w:5.3 },
+  { key:'Kleenex',   label:'Kleenex',        bu:'FC',   buColor:'#4F46E5',
+    frL4w:99.7,  frL13w:99.7, otL4w:51.7, otL13w:39.8, delayL4w:0.8, delayL13w:1.0,
+    valL13w:325497, valL4w:104037, csL13w:18.1, csL4w:5.8 },
+  { key:'Scott',     label:'Scott',          bu:'FC',   buColor:'#4F46E5',
+    frL4w:100.0, frL13w:98.4, otL4w:51.7, otL13w:39.8, delayL4w:0.8, delayL13w:1.0,
+    valL13w:240696, valL4w:42840,  csL13w:13.4, csL4w:2.4 },
+  { key:'U by Kotex',label:'U by Kotex',     bu:'AFC',  buColor:'#059669',
+    frL4w:100.0, frL13w:91.9, otL4w:49.3, otL13w:38.4, delayL4w:0.7, delayL13w:1.0,
+    valL13w:47492,  valL4w:13098,  csL13w:3.9,  csL4w:1.1 },
+];
+
+function otifColor(v) { return v < 35 ? '#FEE2E2' : v < 55 ? '#FEF3C7' : '#D1FAE5'; }
+function otifBorder(v){ return v < 35 ? '#DC2626' : v < 55 ? '#D97706' : '#059669'; }
+function otifText(v)  { return v < 35 ? '#7F1D1D' : v < 55 ? '#92400E' : '#065F46'; }
+
+function fmtK(v) { return v >= 1000 ? (v/1000).toFixed(1)+'K' : Math.round(v).toString(); }
+function fmtVal(v){ return '$'+Math.round(v/1000)+'K'; }
+
+function buildFRTable(brands) {
+  const wrap = document.getElementById('frTableWrap');
+  if (!wrap) return;
+  // Sort by L13W value desc
+  const sorted = [...brands].sort((a,b) => b.valL13w - a.valL13w);
+  const below  = sorted.filter(b => b.frL4w < 95);
+  const above  = sorted.filter(b => b.frL4w >= 95);
+
+  let h = '<table class="ins-data-tbl"><thead><tr>'
+    + '<th style="text-align:left">Product (BU)</th>'
+    + '<th>FR% L4W</th><th>vs L13W</th><th>L4W Val</th><th>L4W CS</th><th>L13W Val</th>'
+    + '</tr></thead><tbody>';
+
+  function row(b) {
+    const fr = b.frL4w;
+    const delta = (b.frL4w - b.frL13w).toFixed(1);
+    const dColor = delta >= 0 ? '#059669' : '#C00000';
+    const dStr   = delta >= 0 ? '+'+delta+'pp' : delta+'pp';
+    const bg = frColor(fr); const tc = frText(fr); const bc = frBorder(fr);
+    return `<tr>
+      <td><span class="ins-dot" style="background:${bg};border:1px solid ${bc}"></span>${b.label} <span style="color:#9CA3AF;font-size:10px">${b.bu}</span></td>
+      <td><span class="fr-badge" style="background:${bg};color:${tc}">${fr.toFixed(1)}%</span></td>
+      <td style="color:${dColor};font-weight:700">${dStr}</td>
+      <td style="color:#374151">${fmtVal(b.valL4w)}</td>
+      <td style="color:#6B7280">${fmtK(b.csL4w)}K</td>
+      <td style="color:#9CA3AF;font-size:10.5px">${fmtVal(b.valL13w)}</td>
+    </tr>`;
+  }
+
+  if (below.length) {
+    h += `<tr class="ins-tbl-grp"><td colspan="6" style="color:#C00000">&#11015; Below Target — FR &lt; 95%</td></tr>`;
+    below.forEach(b => h += row(b));
+  }
+  if (above.length) {
+    h += `<tr class="ins-tbl-grp"><td colspan="6" style="color:#059669">&#10003; On Target — FR &ge; 95%</td></tr>`;
+    above.forEach(b => h += row(b));
+  }
+  h += '</tbody></table>';
+  wrap.innerHTML = h;
+}
+
+function buildOTTable(brands) {
+  const wrap = document.getElementById('otTableWrap');
+  if (!wrap) return;
+  const sorted = [...brands].sort((a,b) => b.valL13w - a.valL13w);
+  const below  = sorted.filter(b => b.otL4w < 55);
+  const above  = sorted.filter(b => b.otL4w >= 55);
+
+  let h = '<table class="ins-data-tbl"><thead><tr>'
+    + '<th style="text-align:left">Product (BU)</th>'
+    + '<th>OT% L4W</th><th>vs L13W</th><th>Delay L4W</th><th>L4W Val</th><th>L13W Val</th>'
+    + '</tr></thead><tbody>';
+
+  function row(b) {
+    const ot = b.otL4w;
+    const delta = (b.otL4w - b.otL13w).toFixed(1);
+    const dColor = delta >= 0 ? '#059669' : '#C00000';
+    const dStr   = delta >= 0 ? '+'+delta+'pp' : delta+'pp';
+    const bg = otifColor(ot); const tc = otifText(ot); const bc = otifBorder(ot);
+    const delayD = delta >= 0
+      ? '<span style="color:#059669">↓'+b.delayL4w.toFixed(1)+'d</span>'
+      : '<span style="color:#C00000">↑'+b.delayL4w.toFixed(1)+'d</span>';
+    return `<tr>
+      <td><span class="ins-dot" style="background:${bg};border:1px solid ${bc}"></span>${b.label} <span style="color:#9CA3AF;font-size:10px">${b.bu}</span></td>
+      <td><span class="fr-badge" style="background:${bg};color:${tc}">${ot.toFixed(1)}%</span></td>
+      <td style="color:${dColor};font-weight:700">${dStr}</td>
+      <td>${delayD}</td>
+      <td style="color:#374151">${fmtVal(b.valL4w)}</td>
+      <td style="color:#9CA3AF;font-size:10.5px">${fmtVal(b.valL13w)}</td>
+    </tr>`;
+  }
+
+  if (below.length) {
+    h += `<tr class="ins-tbl-grp"><td colspan="6" style="color:#C00000">&#11015; Attention — On-Time &lt; 55%</td></tr>`;
+    below.forEach(b => h += row(b));
+  }
+  if (above.length) {
+    h += `<tr class="ins-tbl-grp"><td colspan="6" style="color:#059669">&#10003; On Track — On-Time &ge; 55%</td></tr>`;
+    above.forEach(b => h += row(b));
+  }
+  h += '</tbody></table>';
+  wrap.innerHTML = h;
+}
+
+function applyFilter() {
+  const badge = document.getElementById('filterBadge');
+  const lbl = _filter.brand || _filter.bu || 'All Categories';
+  badge.textContent = lbl === 'All Categories' ? 'All Categories' : 'Filter: ' + lbl + '  ×';
+  badge.style.background = lbl === 'All Categories' ? '#E5E7EB' : '#EEF2FF';
+  badge.style.color = lbl === 'All Categories' ? '#6B7280' : '#4F46E5';
+
+  const lbl2 = _filter.brand ? '— ' + _filter.brand : _filter.bu ? '— ' + _filter.bu : '';
+  document.getElementById('frFilterLbl').textContent   = lbl2;
+  document.getElementById('otifFilterLbl').textContent  = lbl2;
+
+  let brands = BRAND_META;
+  if (_filter.brand) {
+    brands = BRAND_META.filter(b => b.key === _filter.brand || b.label === _filter.brand);
+    if (!brands.length) brands = BRAND_META;
+  } else if (_filter.bu) {
+    brands = BRAND_META.filter(b => b.bu === _filter.bu);
+    if (!brands.length) brands = BRAND_META;
+  }
+  buildFRTable(brands);
+  buildOTTable(brands);
+}
+
+function setTMPeriod(p) {
+  _tmPeriod = p;
+  document.getElementById('tmL13w').classList.toggle('active', p === 'l13w');
+  document.getElementById('tmL4w').classList.toggle('active',  p === 'l4w');
+  rebuildTreemap();
+}
+
+function rebuildTreemap() {
+  if (_charts.tm) { _charts.tm.destroy(); }
+  const valKey = _tmPeriod === 'l4w' ? 'l4wVal' : 'l13wVal';
+  const frKey  = _tmPeriod === 'l4w' ? 'l4wFR'  : 'l13wFR';
+  const treeData = INS.treeItems.map(d => ({
+    bu: d.bu, brand: d.brand,
+    value: d[valKey], fillRate: d[frKey],
+    l4wFR: d.l4wFR, l13wFR: d.l13wFR
+  }));
+
+  _charts.tm = new Chart(document.getElementById('treemapChart'), {
+    type: 'treemap',
+    data: {
+      datasets: [{
+        label: 'Shipped Value',
+        tree: treeData,
+        key: 'value',
+        groups: ['bu', 'brand'],
+        spacing: 2,
+        borderWidth: ctx => ctx.raw?.l === 0 ? 2 : 1,
+        borderColor: ctx => {
+          if (ctx.type !== 'data') return '#94A3B8';
+          const fr = (ctx.raw._data?.children?.[0]?.fillRate ?? ctx.raw._data?.fillRate) ?? 95;
+          return ctx.raw.l === 0 ? '#94A3B8' : frBorder(fr);
+        },
+        backgroundColor: ctx => {
+          if (ctx.type !== 'data') return 'rgba(241,245,249,0.8)';
+          const fr = (ctx.raw._data?.children?.[0]?.fillRate ?? ctx.raw._data?.fillRate) ?? 95;
+          return ctx.raw.l === 0 ? 'rgba(241,245,249,0.85)' : frColor(fr);
+        },
+        labels: {
+          display: true,
+          formatter(ctx) {
+            if (ctx.type !== 'data') return '';
+            if (ctx.raw.l === 0) return ctx.raw.g;
+            const d = ctx.raw._data;
+            const leaf = d?.children?.[0] ?? d;
+            const kStr = '$' + Math.round((leaf.value || 0) / 1000) + 'K';
+            const fr = leaf.fillRate ?? 0;
+            const frStr = fr.toFixed(0) + '%';
+            const trend = (leaf.l4wFR > leaf.l13wFR) ? ' ↑' : (leaf.l4wFR < leaf.l13wFR) ? ' ↓' : '';
+            return [ctx.raw.g, kStr + '  FR:' + frStr + trend];
+          },
+          color(ctx) {
+            if (ctx.raw.l === 0) return '#1F3864';
+            const fr = (ctx.raw._data?.children?.[0]?.fillRate ?? ctx.raw._data?.fillRate) ?? 95;
+            return frText(fr);
+          },
+          font: [
+            { size: 9, weight: '800' },
+            { size: 7.5, weight: '600' }
+          ],
+          align: 'center'
+        }
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          enabled: true,
+          callbacks: {
+            title: ctx => ctx[0]?.raw?.g || '',
+            label: ctx => {
+              const d = ctx.raw._data;
+              if (!d) return '';
+              const leaf = d.children?.[0] ?? d;
+              return [
+                'Value: $' + Math.round((leaf.value || 0) / 1000) + 'K',
+                'Fill Rate: ' + (leaf.fillRate || 0).toFixed(1) + '%',
+                'L4W FR: ' + (leaf.l4wFR ?? '—') + '%  |  L13W FR: ' + (leaf.l13wFR ?? '—') + '%'
+              ];
+            }
+          }
+        },
+        datalabels: { display: false }
+      },
+      onClick(event, elements, chart) {
+        if (!elements.length) { clearFilter(); return; }
+        try {
+          const raw = elements[0].element.$context.raw;
+          if (!raw) return;
+          if (raw.l === 0) {
+            setFilter({ bu: raw.g, brand: null });
+          } else {
+            const leaf = raw._data?.children?.[0] ?? raw._data;
+            setFilter({ bu: leaf?.bu || null, brand: raw.g });
+          }
+        } catch(e) { clearFilter(); }
+      }
+    }
+  });
+}
+
+/* ── CHART.JS GLOBAL DEFAULTS ────────────────── */
+if (typeof Chart !== "undefined") {
+  Chart.defaults.font.size = 9.5;
+  Chart.defaults.font.family = "'Segoe UI', Arial, sans-serif";
+}
+
+/* ── INSIGHTS CHARTS INIT ───────────────────────────────── */
+function initInsightsCharts() {
+
+  /* 1 — TREEMAP */
+  rebuildTreemap();
+
+  /* 2 — FILL RATE TABLE */
+  buildFRTable(BRAND_META);
+
+  /* 3 — ON-TIME TABLE */
+  buildOTTable(BRAND_META);
+
+  /* 4 — WEEK CONCENTRATION */
+  _charts.week = new Chart(document.getElementById('weekCompChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Wk 1\nD 1-7','Wk 2\nD 8-14','Wk 3\nD 15-21','Wk 4\nD 22-28','Wk 5\nD 29-31'],
+      datasets: [
+        { label:'L4W',  data: INS.weeks.l4w,
+          backgroundColor: ['#CBD5E1','#4F46E5','#818CF8','#818CF8','#CBD5E1'],
+          borderRadius:3 },
+        { label:'L13W', data: INS.weeks.l13w,
+          backgroundColor: ['#E2E8F0','#93C5FD','#BFDBFE','#BFDBFE','#E2E8F0'],
+          borderRadius:3 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      layout: { padding:{ top:18 } },
+      plugins: {
+        legend: { display:false }, tooltip: { enabled:false },
+        datalabels: {
+          anchor:'end', align:'top',
+          formatter: v => v + '%',
+          color: ctx => ctx.dataset.label === 'L4W' ? '#1F3864' : '#6B7280',
+          font: { size:9, weight:'700' }
+        }
+      },
+      scales: {
+        y: { min:0, max:62, grid:{ color:'#E5E7EB' }, border:{ display:false },
+             ticks:{ callback: v => v + '%', font:{ size:9.5 }, color:'#6B7280', stepSize:10 } },
+        x: { grid:{ display:false }, border:{ display:false },
+             ticks:{ font:{ size:9.5, weight:'600' }, color:'#374151', maxRotation:0 } }
+      }
+    }
+  });
+}
+
+/* ── FORECAST TRENDS DATA ──────────────────────────────── */
+const FCST_DATA = [
+  // ── FORECASTED JUNE 2026 ──
+  { label:'Cottonelle',  bu:'FC',   cat:'Tissue & Towel',       vel:'Fast',  velVal:53.4, forecasted:true,
+    frL4w:81.0,  frL13w:88.6, frGap:-14.0, frDelta:-7.6,
+    otL4w:51.7,  otL13w:39.8, otGap:  1.7, otDelta: 11.9,
+    valL13w:'$694K', valL4w:'$36K',  csL4w:'2.0K',
+    risk:'Largest value risk: $8.5K cut L4W. FR declining 7.6pp.', offender:true },
+  { label:'Huggies',    bu:'B&CC', cat:'Baby & Child Care',     vel:'Fast',  velVal:41.1, forecasted:true,
+    frL4w:86.3,  frL13w:83.7, frGap: -8.7, frDelta:  2.6,
+    otL4w:31.5,  otL13w:30.7, otGap:-18.5, otDelta:  0.8,
+    valL13w:'$534K', valL4w:'$142K', csL4w:'9.5K',
+    risk:'Lowest OT% in portfolio. $97K late delivery value at risk.', offender:true },
+  { label:'Depend',     bu:'AFC',  cat:'Adult & Feminine Care', vel:'Mid',   velVal:32.0, forecasted:true,
+    frL4w:88.7,  frL13w:98.2, frGap: -6.3, frDelta: -9.5,
+    otL4w:49.3,  otL13w:38.4, otGap: -0.7, otDelta: 10.9,
+    valL13w:'$416K', valL4w:'$87K',  csL4w:'7.3K',
+    risk:'Biggest FR regression: -9.5pp in L4W. Was top performer.', offender:true },
+  { label:'Viva',       bu:'FC',   cat:'Tissue & Towel',       vel:'Mid',   velVal:26.6, forecasted:true,
+    frL4w:98.9,  frL13w:99.7, frGap:  3.9, frDelta: -0.8,
+    otL4w:51.7,  otL13w:39.8, otGap:  1.7, otDelta: 11.9,
+    valL13w:'$345K', valL4w:'$96K',  csL4w:'5.3K',
+    risk:'Slight FR dip -0.8pp. OT strong +11.9pp. Monitor FR.', offender:false },
+  { label:'Kleenex',    bu:'FC',   cat:'Tissue & Towel',       vel:'Mid',   velVal:25.0, forecasted:true,
+    frL4w:99.7,  frL13w:99.7, frGap:  4.7, frDelta:  0.0,
+    otL4w:51.7,  otL13w:39.8, otGap:  1.7, otDelta: 11.9,
+    valL13w:'$325K', valL4w:'$104K', csL4w:'5.8K',
+    risk:'Stable FR, strong OT gain +11.9pp. Sustain.', offender:false },
+  { label:'Scott',      bu:'FC',   cat:'Tissue & Towel',       vel:'Mid',   velVal:18.5, forecasted:true,
+    frL4w:100.0, frL13w:98.4, frGap:  5.0, frDelta:  1.6,
+    otL4w:51.7,  otL13w:39.8, otGap:  1.7, otDelta: 11.9,
+    valL13w:'$241K', valL4w:'$43K',  csL4w:'2.4K',
+    risk:'Perfect FR. Confirmed $42.8K open order. Best gainer.', offender:false },
+  // ── NOT FORECASTED THIS MONTH ──
+  { label:'U by Kotex', bu:'AFC',  cat:'Adult & Feminine Care', vel:'Low',   velVal:3.7, forecasted:false,
+    frL4w:100.0, frL13w:91.9, frGap:  5.0, frDelta:  8.1,
+    otL4w:49.3,  otL13w:38.4, otGap: -0.7, otDelta: 10.9,
+    valL13w:'$47K',  valL4w:'$13K',  csL4w:'1.1K',
+    risk:'No Jun plan. FR recovered +8.1pp. Consider activating.', offender:false },
+];
+
+function initForecastPage() {
+  const tbody = document.getElementById('fcstBody');
+  if (!tbody) return;
+
+  const fmtFR   = v => v != null ? v.toFixed(1) + '%' : '—';
+  const fmtGap  = v => v == null ? '—' : (v >= 0 ? '+' + v.toFixed(1) + 'pp' : v.toFixed(1) + 'pp');
+  const gapCls  = v => v == null ? 'g-flat' : v > 0 ? 'g-pos' : v < 0 ? 'g-neg' : 'g-flat';
+  const trendArrow = v => v == null ? '' : v > 0 ? '&#8593;' : v < 0 ? '&#8595;' : '&#8594;';
+  const velHtml = d => {
+    const cls = d.vel === 'Fast' ? 'vel-fast' : d.vel === 'Mid' ? 'vel-mid' : 'vel-low';
+    const ico = d.vel === 'Fast' ? '&#9889;' : d.vel === 'Mid' ? '&#8767;' : '&#128034;';
+    return '<span class="vel-badge ' + cls + '">' + ico + ' ' + d.vel + ' ' + d.velVal.toFixed(0) + 'K/wk</span>';
+  };
+  const frBadgeHtml = v => {
+    const bg = frColor(v); const tc = frText(v);
+    return '<span class="fr-badge" style="background:' + bg + ';color:' + tc + '">' + v.toFixed(1) + '%</span>';
+  };
+  const otBadgeHtml = v => {
+    const bg = otifColor(v); const tc = otifText(v);
+    return '<span class="fr-badge" style="background:' + bg + ';color:' + tc + '">' + v.toFixed(1) + '%</span>';
+  };
+
+  function dataRow(d, extraClass) {
+    return '<tr class="' + (extraClass||'') + '">'
+      + '<td>' + d.label + '</td>'
+      + '<td><span style="font-size:10px;font-weight:700;padding:1px 4px;border-radius:2px;background:#EEF2FF;color:#3730A3">' + d.bu + '</span></td>'
+      + '<td>' + velHtml(d) + '</td>'
+      + '<td style="color:#374151;font-weight:700">' + d.valL4w + '</td>'
+      // Fill Rate
+      + '<td>' + frBadgeHtml(d.frL4w) + '</td>'
+      + '<td style="color:#9CA3AF;font-size:10.5px">' + fmtFR(d.frL13w) + '</td>'
+      + '<td class="' + gapCls(d.frGap) + '">' + fmtGap(d.frGap) + '</td>'
+      + '<td class="' + gapCls(d.frDelta) + '">' + trendArrow(d.frDelta) + ' ' + fmtGap(d.frDelta) + '</td>'
+      // On-Time
+      + '<td>' + otBadgeHtml(d.otL4w) + '</td>'
+      + '<td style="color:#9CA3AF;font-size:10.5px">' + fmtFR(d.otL13w) + '</td>'
+      + '<td class="' + gapCls(d.otGap) + '">' + fmtGap(d.otGap) + '</td>'
+      + '<td class="' + gapCls(d.otDelta) + '">' + trendArrow(d.otDelta) + ' ' + fmtGap(d.otDelta) + '</td>'
+      // Risk
+      + '<td style="text-align:left;font-size:10px;color:#374151;max-width:100px;white-space:normal;line-height:1.3">' + d.risk + '</td>'
+      + '</tr>';
+  }
+
+  function groupHdr(label, color, colspan) {
+    return '<tr class="fcst-grp"><td colspan="' + colspan + '" style="color:' + color + '!important">' + label + '</td></tr>';
+  }
+  function subHdr(label, color, colspan) {
+    return '<tr class="fcst-sub"><td colspan="' + colspan + '" style="color:' + color + '!important">' + label + '</td></tr>';
+  }
+
+  const COLS = 13;
+  const forecasted = FCST_DATA.filter(d => d.forecasted);
+  const notFcst    = FCST_DATA.filter(d => !d.forecasted);
+  const offenders  = forecasted.filter(d => d.offender);
+  const gainers    = forecasted.filter(d => !d.offender);
+
+  let html = '';
+
+  // ── FORECASTED GROUP ──
+  html += groupHdr('&#128197; FORECASTED — JUNE 2026 &nbsp;&middot;&nbsp; 6 PRODUCTS &nbsp;&middot;&nbsp; Fast &#215;2 &nbsp;|&nbsp; Mid &#215;4', '#93C5FD', COLS);
+
+  if (offenders.length) {
+    html += subHdr('&#11015; TOP OFFENDERS &nbsp;&mdash;&nbsp; Fill Rate &lt; 95% (sorted by value &darr;)', '#FCA5A5', COLS);
+    offenders.forEach(d => html += dataRow(d, 'fcst-off'));
+  }
+  if (gainers.length) {
+    html += subHdr('&#11014; TOP GAINERS &nbsp;&mdash;&nbsp; On / Above Target or Improving (sorted by value &darr;)', '#6EE7B7', COLS);
+    gainers.forEach(d => html += dataRow(d, 'fcst-gain'));
+  }
+
+  // ── NOT FORECASTED GROUP ──
+  if (notFcst.length) {
+    html += groupHdr('&#9744; NOT FORECASTED THIS MONTH &nbsp;&middot;&nbsp; ' + notFcst.length + ' PRODUCT &nbsp;&middot;&nbsp; Low Velocity &mdash; No Jun 2026 LE', '#CBD5E1', COLS);
+    html += subHdr('&#128202; TREND WATCH &nbsp;&mdash;&nbsp; Best Gainer in Portfolio', '#93C5FD', COLS);
+    notFcst.forEach(d => html += dataRow(d, 'fcst-nofcst'));
+  }
+
+  tbody.innerHTML = html;
+}
+
+/* ── RISK DONUT — MTD Pace vs Run Rate ─────────────────── */
+const riskDonutPlugin = {
+  id: 'riskCenterText',
+  afterDraw(chart) {
+    const { ctx, chartArea } = chart;
+    if (!chartArea) return;
+    const cx = (chartArea.left + chartArea.right) / 2;
+    const cy = (chartArea.top + chartArea.bottom) / 2;
+    ctx.save();
+    // "9%" — run rate as % of LE
+    ctx.font = 'bold 16px "Segoe UI",sans-serif';
+    ctx.fillStyle = '#C00000';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('9%', cx, cy - 10);
+    // "Run Rate" sublabel
+    ctx.font = '600 7px "Segoe UI",sans-serif';
+    ctx.fillStyle = '#6B7280';
+    ctx.fillText('Run Rate', cx, cy + 2);
+    // "-21pp vs Pace"
+    ctx.font = 'bold 7px "Segoe UI",sans-serif';
+    ctx.fillStyle = '#C00000';
+    ctx.fillText('− 21pp Pace', cx, cy + 13);
+    ctx.restore();
+  }
+};
+
+const riskCtx = document.getElementById('riskDonut').getContext('2d');
+new Chart(riskCtx, {
+  type: 'doughnut',
+  plugins: [riskDonutPlugin],
+  data: {
+    datasets: [{
+      data: [2.1, 10.6, 10.6, 0.5, 76.2],
+      backgroundColor: ['#137333', '#0E7490', '#FCA5A5', '#1F3864', '#E5E7EB'],
+      borderWidth: 0,
+      hoverOffset: 0
+    }]
+  },
+  options: {
+    responsive: false,
+    cutout: '60%',
+    animation: false,
+    plugins: {
+      legend:     { display: false },
+      tooltip:    { enabled: false },
+      datalabels: { display: false }
+    }
+  }
+});
+</script>
+</body>
+</html>
